@@ -7,22 +7,31 @@ function App() {
   const [books, setBooks] = useState([
     {id: 1,
     author: "Theodore Dreiser",
-    title: "The Financier / Collected works issued in twelve volumes",
+    title: "The Financier",
+    collection: "Collected works issued in twelve volumes",
     volume: 3,
     series: "A Trilogy of Desire",
     year: 1986, },
     {id: 2,
     author: "Theodore Dreiser",
-    title: "The Titan / Collected works issued in twelve volumes",
+    title: "The Titan",
+    collection: "Collected works issued in twelve volumes",
     volume: 4,
     series: "A Trilogy of Desire",
     year: 1986, },
     {id: 3,
       author: "Theodore Dreiser",
-      title: "The Stoic / Collected works issued in twelve volumes",
+      title: "The Stoic",
+      collection: "Collected works issued in twelve volumes",
       volume: 5,
       series: "A Trilogy of Desire",
       year: 1986, },
+      {id: 4,
+        author: "Aleksandr Pushkin",
+        title: "Fairy Tales",
+        volume: '',
+        series: "",
+        year: 1989, },
     ])
 
   const [newBook, setNewBook] = useState({
@@ -49,23 +58,35 @@ const [searchValue, setSearchValue] = useState({
   title: '',
 })
 
-const [foundValue, setFoundValue] = useState({})
+const [booksByAuthor, setBooksByAuthor] = useState([])
+const [booksByTitle, setBooksByTitle] = useState([])
 
 const handleSearchInputChanges = event => {
 const {name, value} = event.target
-setSearchValue({...searchValue, [name]: value})
-}
-
-const resetInputField = () => {
-  setSearchValue('')
-}
-
-const searchBook = (searchValue,) =>{
- return setFoundValue(searchValue);
+  setSearchValue({...searchValue, [name]: value})
 }
 
 
+const searchByAutor = ({searchValue, books}) => {
+ const bookByAutor =  books.filter(book => {
+     return book.author.toLowerCase().includes(searchValue.author.toLowerCase())
+  })
+  console.log("bookByAuthor", bookByAutor)
+  setBooksByTitle([])
+  return setBooksByAuthor(bookByAutor)
 
+}
+
+const searchByTitle = ({searchValue, books}) => {
+ const bookByTitle = books.filter(book => {
+    return book.title.toLowerCase().includes(searchValue.title.toLowerCase())
+ })
+ console.log("bookByTitle", bookByTitle)
+ setBooksByAuthor([])
+return setBooksByTitle(bookByTitle)
+}
+
+console.log("searchValue",searchValue)
 
 //const [totalStars, setTotal] = useState(5)
 
@@ -179,40 +200,53 @@ const searchBook = (searchValue,) =>{
 
 <div>
 
-<form 
-onSubmit={
- event => {
-   event.preventDefault();
-   (!searchValue.author || !searchValue.title) 
-   ? console.log("You sould type smth.")
-   : setSearchValue({searchValue})
-     searchBook(searchValue)
-     
- }
-}
->
-        <label>Author</label>
+     <label>Search by Author </label>
         <input
           name="author"
           value={searchValue.author}
-          onChange={handleSearchInputChanges}
+          onChange={(event) => handleSearchInputChanges(event)}
           type="text"
         />
-
-        <label>Title</label>
+       
+       <button onClick={() => searchByAutor({searchValue: searchValue, books: books})}> Search </button>
+     <br/>
+     <br/>
+        <label>Search by Title </label>
         <input
           name="title"
           value={searchValue.title}
-          onChange={handleSearchInputChanges}
+          onChange={(event) => handleSearchInputChanges(event)}
           type="text"
         />
-        <button>Search</button>
-      </form>
+        <button onClick={() => searchByTitle({searchValue: searchValue, books: books})}> Search </button>
+    
+    
+        <br/>
+        <br/>
 
-      <h3>You search: {searchBook.author} {searchBook.title}</h3>
+      <ul>
+        { booksByAuthor.length > 0 ?
+        (
+          booksByAuthor.map(book => (
+          <li key={book.id}><strong>Book:</strong> {book.author} {book.title}</li>
+        ))
+
+        ) : (
+
+          booksByTitle.map(book => (
+            <li key={book.id}><strong>Book:</strong> {book.author} / "{book.title}"</li>
+          ))
+        )
+      }
+       </ul>
+
+    
 </div>
+  
 
-
+  <pre>{JSON.stringify(searchValue, null, 4)}</pre>
+  <pre>{JSON.stringify(booksByAuthor, null, 4)}</pre>
+  <pre>{JSON.stringify(booksByTitle, null, 4)}</pre>
     </div>
   );
 }
