@@ -7,9 +7,11 @@ function AddBook(props) {
     id: null,
     author: "",
     title: "",
+    collection: "",
     volume: "",
     series: "",
     year: "",
+    rating: 0,
   })
 
 const handleInputChange = (event) => {
@@ -36,6 +38,9 @@ const handleInputChange = (event) => {
   <br/>
   <label>Title</label>
   <input type="text" name="title" value={newBook.title} onChange={handleInputChange} />
+ <br/>
+ <label>Collection</label>
+  <input type="text" name="collection" value={newBook.collection} onChange={handleInputChange} />
  <br/>
   <label>Volume</label>
   <input type="text" name="volume" value={newBook.volume} onChange={handleInputChange} />

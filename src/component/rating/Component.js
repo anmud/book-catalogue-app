@@ -1,35 +1,28 @@
-import React, {useState} from 'react';
-import Star from './Star'
+import React  from 'react';
 
 
-function Rating(props) {
+
+function Rating({ bookToRate, setBookToRate, updateRating}) {
   
 
-
-const [selectedStars, setSelectedStars] = useState(0)
-
-
+  const handleInputChange = (event) => {
+    const { name, value } = event.target
+    setBookToRate({ ...bookToRate, [name]: value })
+  }
 
   return (
-    <div className="App">
-    <h1>Rate a book</h1>
+    <div>
+
+      <h3>Set you rating (1-5)</h3>
+
+      <p>{bookToRate.author} : </p>
+      <p>"{bookToRate.title}"</p> 
+      <br />
+      <input type="text" name="rating" value={bookToRate.rating} onChange={handleInputChange} />
+      <button onClick={() => updateRating({bookToRate: bookToRate, id: bookToRate.id})}>Rate</button>
+      <br />
 
 
-    <div className="star-rating">
-   { 
-    [...Array(props.totalStars)].map((number, i) => (
-    <Star
-    key={i}
-    selected={i < (selectedStars || 0)}
-    onClick={() => setSelectedStars( i + 1)}
-   />
-   ))}
-    <p>
-      {selectedStars} of {props.totalStars} stars
-    </p>
-   </div>
-
- 
     </div>
   );
 }
