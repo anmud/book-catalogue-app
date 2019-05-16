@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 
-function AddBook(props) {
+function AddBook({books, setBooks}) {
   
   const [newBook, setNewBook] = useState({
     id: null,
@@ -19,6 +19,11 @@ const handleInputChange = (event) => {
   setNewBook({...newBook, [name]: value})
 }
 
+const addNewBook = newBook => {
+  newBook.id = books.length + 1
+return  setBooks([...books, newBook])
+}
+
   return (
     <div className="App">
     <h1>Add a new book</h1>
@@ -29,7 +34,7 @@ const handleInputChange = (event) => {
 
            (!newBook.author || ! newBook.title || ! newBook.year)
            ? console.log("enter smth in the input")
-           : props.addNewBook(newBook)
+           : addNewBook(newBook)
            setNewBook(newBook)
          }}
         >
@@ -51,7 +56,8 @@ const handleInputChange = (event) => {
   <label>Year</label>
   <input type="text" name="year" value={newBook.year} onChange={handleInputChange} />
 <br/>
-  <button> Add </button>
+  <button type="submit"> Add </button>
+ 
 </form>
 <hr/>
 

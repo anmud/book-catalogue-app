@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 
-function SearchBook(props) {
+function SearchBook({books}) {
   
     const [searchValue, setSearchValue] = useState({
         author: '',
@@ -13,6 +13,28 @@ function SearchBook(props) {
           setSearchValue({...searchValue, [name]: value})
         }
                 
+        const [booksByAuthor, setBooksByAuthor] = useState([])
+        const [booksByTitle, setBooksByTitle] = useState([])
+      
+      
+        const searchByAutor = ({ searchValue, books }) => {
+          const bookByAutor = books.filter(book => {
+            return book.author.toLowerCase().includes(searchValue.author.toLowerCase())
+          })
+          console.log("bookByAuthor", bookByAutor)
+          setBooksByTitle([])
+          return setBooksByAuthor(bookByAutor)
+      
+        }
+      
+        const searchByTitle = ({ searchValue, books }) => {
+          const bookByTitle = books.filter(book => {
+            return book.title.toLowerCase().includes(searchValue.title.toLowerCase())
+          })
+          console.log("bookByTitle", bookByTitle)
+          setBooksByAuthor([])
+          return setBooksByTitle(bookByTitle)
+        }
 
   return (
     <div className="App">
@@ -28,7 +50,7 @@ function SearchBook(props) {
      type="text"
    />
   
-   <button onClick={() => props.searchByAutor({searchValue: searchValue, books: props.books})}> Search </button>
+   <button onClick={() => searchByAutor({searchValue: searchValue, books: books})}> Search </button>
    <br/>
    <br/>
    <label>Search by Title </label>
@@ -38,22 +60,22 @@ function SearchBook(props) {
      onChange={(event) => handleSearchInputChanges(event)}
      type="text"
    />
-   <button onClick={() => props.searchByTitle({searchValue: searchValue, books: props.books})}> Search </button>
+   <button onClick={() => searchByTitle({searchValue: searchValue, books: books})}> Search </button>
 
 
    <br/>
    <br/>
 
  <ol>
-   { props.booksByAuthor.length > 0 ?
+   { booksByAuthor.length > 0 ?
    (
-     props.booksByAuthor.map(book => (
+     booksByAuthor.map(book => (
      <li key={book.id}> {book.author} : "{book.title}" / {book.collection} - vol. {book.volume}. - {book.series}. - {book.year}</li>
    ))
 
    ) : (
 
-     props.booksByTitle.map(book => (
+     booksByTitle.map(book => (
        <li key={book.id}> {book.author} : "{book.title}" / {book.collection} - vol. {book.volume}. - {book.series}. - {book.year}</li>
      ))
    )
@@ -65,7 +87,8 @@ function SearchBook(props) {
 
 <pre>{JSON.stringify(searchValue, null, 4)}</pre>
 
- 
+   <pre>{JSON.stringify(booksByAuthor, null, 4)}</pre>
+      <pre>{JSON.stringify(booksByTitle, null, 4)}</pre>
     </div>
   );
 }

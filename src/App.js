@@ -5,6 +5,8 @@ import AddBook from './component/add-book/Component';
 import SearchBook from './component/search/Component';
 import Rating from './component/rating/Component';
 import EditBook from './component/edit-book/Component'
+import Progress from './component/progress/Component'
+import Notes from './component/notes/Component'
 
 
 function App() {
@@ -15,6 +17,8 @@ function App() {
       title: "The Financier",
       collection: "Collected works issued in twelve volumes",
       volume: 3,
+      pages: 350,
+      finishedPages: 10,
       series: "A Trilogy of Desire",
       year: 1986,
       rating: 0
@@ -25,6 +29,8 @@ function App() {
       title: "The Titan",
       collection: "Collected works issued in twelve volumes",
       volume: 4,
+      pages: 258,
+      finishedPages: 0,
       series: "A Trilogy of Desire",
       year: 1986,
       rating: 0
@@ -35,6 +41,8 @@ function App() {
       title: "The Stoic",
       collection: "Collected works issued in twelve volumes",
       volume: 5,
+      pages: 320,
+      finishedPages: 0,
       series: "A Trilogy of Desire",
       year: 1986,
       rating: 0
@@ -45,6 +53,8 @@ function App() {
       title: "Fairy Tales",
       collection: "no collection",
       volume: 0,
+      pages: 150,
+      finishedPages: 0,
       series: "no series",
       year: 1989,
       rating: 0
@@ -64,19 +74,15 @@ function App() {
 
   const [editing, setEditing] = useState(false)
 
-  const addNewBook = newBook => {
-    newBook.id = books.length + 1
-    setBooks([...books, newBook])
-  }
 
   const updateBook = ({ currentBook, id }) => {
       setEditing(false)
-      setBooks(books.map(book => (book.id === id ? currentBook : book)))
+    return  setBooks(books.map(book => (book.id === id ? currentBook : book)))
   }
 
   const editRow = book => {
     setEditing(true)
-    setCurrentBook({
+  return  setCurrentBook({
       ...currentBook,
       id: book.id,
       author: book.author,
@@ -100,7 +106,7 @@ function App() {
 
   const editRating = book => {
     setRate(true)
-    setBookToRate({
+   return setBookToRate({
       ...bookToRate,
       id: book.id,
       author: book.author,
@@ -111,36 +117,51 @@ function App() {
 
   const updateRating = ({bookToRate, id}) => {
     setRate(false)
-    setBooks(books.map(book => (book.id === bookToRate.id ? {...book, rating: bookToRate.rating} : book)))
+    return setBooks(books.map(book => (book.id === bookToRate.id ? {...book, rating: bookToRate.rating} : book)))
   }
 
-  const [booksByAuthor, setBooksByAuthor] = useState([])
-  const [booksByTitle, setBooksByTitle] = useState([])
+  const [toggleProgress, setToggleProgress] = useState(false)
 
+  const [bookInProgress, setBookInProgress] = useState({
+    id: 0,
+    author: " ",
+    title: " ",
+    pages: 0,
+    finishedPages: 0,
+  })
 
-  const searchByAutor = ({ searchValue, books }) => {
-    const bookByAutor = books.filter(book => {
-      return book.author.toLowerCase().includes(searchValue.author.toLowerCase())
+  const editProgress = book => {
+    setToggleProgress(true)
+    return setBookInProgress({
+      ...bookInProgress,
+      id: book.id,
+      author: book.author,
+      title: book.title,
+      pages: book.pages,
+      finishedPages: book.finishedPages,
     })
-    console.log("bookByAuthor", bookByAutor)
-    setBooksByTitle([])
-    return setBooksByAuthor(bookByAutor)
-
-  }
-
-  const searchByTitle = ({ searchValue, books }) => {
-    const bookByTitle = books.filter(book => {
-      return book.title.toLowerCase().includes(searchValue.title.toLowerCase())
-    })
-    console.log("bookByTitle", bookByTitle)
-    setBooksByAuthor([])
-    return setBooksByTitle(bookByTitle)
   }
 
 
-  const deleteBook = ({ books, bookId }) => {
-    setBooks(books.filter(book => book.id !== bookId))
+  const updateProgress = ({ bookInProgress, id}) => {
+   return setBooks(books.map(book => 
+    (book.id === id ? { ...book, finishedPages: bookInProgress.finishedPages } : book)))
+    
+   // return countProgress(books,id)
   }
+
+  // const [percent, setPercent] = useState(0)
+
+  // const countProgress = (books,id) => {
+  //   const result = books.map(book => (
+  //     book.id === id 
+  //     ? parseFloat((book.finishedPages * book.pages / 100) + " %")
+  //     : book
+  //   ))
+  //   console.log("result", result)
+  //   return parseFloat(setPercent())
+  // }
+
 
 
   return (
@@ -168,16 +189,37 @@ function App() {
               <Catalogue
                 books={books}
                 setBooks={setBooks}
-                deleteBook={deleteBook}
                 editRow={editRow}
                 editRating={editRating}
+                editProgress={editProgress}
               />
 
             </div>
 
+          )
+          
+          }
+
+      </div>
+
+      <div>
+        {
+          toggleProgress ? (
+           <div>
+            <Progress
+          bookInProgress={bookInProgress}
+          setBookInProgress={setBookInProgress}
+          updateProgress={updateProgress}
+          books={books}
+          />
+          </div>
+
+          ) : (
+
+           console.log("Update your progress")
+
           )}
-
-
+        
       </div>
 
       <div>
@@ -196,22 +238,25 @@ function App() {
         ) : (
 
             <div>
-              <AddBook addNewBook={addNewBook} />
+              <AddBook 
+              books={books}
+              setBooks={setBooks}
+               />
             </div>
 
           )}
       </div>
 
       <SearchBook
-        searchByAutor={searchByAutor}
-        searchByTitle={searchByTitle}
-        booksByAuthor={booksByAuthor}
-        booksByTitle={booksByTitle}
         books={books}
       />
+      
+      <Notes
+      books={books}
+      />
+      
 
-      <pre>{JSON.stringify(booksByAuthor, null, 4)}</pre>
-      <pre>{JSON.stringify(booksByTitle, null, 4)}</pre>
+     
     </div>
   );
 }

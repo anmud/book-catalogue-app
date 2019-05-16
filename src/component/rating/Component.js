@@ -2,7 +2,7 @@ import React  from 'react';
 
 
 
-function Rating({ bookToRate, setBookToRate, updateRating}) {
+function Rating({ bookToRate, setBookToRate, updateRating, rate, setRate}) {
   
 
   const handleInputChange = (event) => {
@@ -20,6 +20,7 @@ function Rating({ bookToRate, setBookToRate, updateRating}) {
       <br />
       <input type="text" name="rating" value={bookToRate.rating} onChange={handleInputChange} />
       <button onClick={() => updateRating({bookToRate: bookToRate, id: bookToRate.id})}>Rate</button>
+      <button onClick={() => setRate(false)}>Cancel</button>
       <br />
 
 

@@ -16,7 +16,11 @@ function Catalogue(props) {
 
  // })
 
- const {books, deleteBook, editRow, editRating} = props
+ const {books, setBooks, editRow, editRating, editProgress} = props
+
+ const deleteBook = ({ books, bookId }) => {
+  return setBooks(books.filter(book => book.id !== bookId))
+ }
 
 
   return (
@@ -32,6 +36,7 @@ function Catalogue(props) {
         <th>Volume</th>
         <th>Series</th>
         <th>Year</th>
+        <th>Finished Pages</th>
         <th>Rating</th>
       </tr>
     </thead>
@@ -45,11 +50,13 @@ function Catalogue(props) {
         <td>{book.volume}</td>
         <td>{book.series}</td>
         <td>{book.year}</td>
+        <td>{book.finishedPages}</td>
         <td>{book.rating}</td>
         <td>
           <button onClick={() => editRow(book)}>Edit</button>
           <button onClick={()=>deleteBook({books: books, bookId: book.id})}>Delete</button>
           <button onClick={() => editRating(book)}>Rate</button>
+          <button onClick={() => editProgress(book)}>Set progress</button>
         </td>
       </tr>
         ))

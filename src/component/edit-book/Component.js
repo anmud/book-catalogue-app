@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React  from 'react';
 
 
 function EditBook(props) {
   
-    const { currentBook, setCurrentBook, editing, setEditing, updateBook } = props
+    const { currentBook, setCurrentBook,  setEditing, updateBook } = props
 
     const handleInputChange = (event) => {
         const { name, value } = event.target
