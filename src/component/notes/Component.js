@@ -1,35 +1,36 @@
-import React, {useState}  from 'react';
+import React  from 'react';
 import NotesContainer from './NotesContainer'
 
 
-
-function Notes({books}) {
-  
-    const [allNotes, setAllNotes] = useState([
-        {
-            id: 1,
-            bookTitle: 'The Titan',
-            note: "The most informative book",
-        }
-    ])
+function Notes({ books, allNotes, setAllNotes }) {
 
     const updateNotes = (note) => {
-     note.id = allNotes.length + 1
-     return setAllNotes([...allNotes, note])
+        note.id = allNotes.length + 1
+        return setAllNotes([...allNotes, note])
     }
 
-    console.log("all notes", allNotes)
-    
-  return (
-      <div>
+    // console.log("all notes", allNotes)
 
-          <NotesContainer
-          books={books}
-          updateNotes={updateNotes}
-          />
+    return (
+        <div>
 
-      </div>
-  );
+            <NotesContainer
+                books={books}
+                updateNotes={updateNotes}
+            />
+
+            <div>
+                <div>
+                    {
+                        allNotes.map(note => <p key={note.id}>{note.bookTitle}:  {note.note}</p>)
+                    }
+                </div>
+
+
+            </div>
+
+        </div>
+    );
 }
 
 export default Notes;

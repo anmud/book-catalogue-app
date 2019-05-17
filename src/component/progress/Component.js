@@ -26,7 +26,7 @@ const handleInputChange = event => {
     
 
 
-     <p>You've already read {bookInProgress.finishedPages} from {bookInProgress.pages} pages</p>
+     <p>You've already read {bookInProgress.finishedPages} from {bookInProgress.pages} pages, percentage of {Math.round((bookInProgress.finishedPages / bookInProgress.pages) * 100) + "%"}</p>
      {/* <p>Progress: {percent}</p> */}
    <hr/>
     </div>
