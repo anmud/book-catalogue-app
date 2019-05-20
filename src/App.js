@@ -1,16 +1,34 @@
 import React, { useState } from 'react';
 import './App.css';
-import Catalogue from './component/books-catalogue/Component'
-import AddBook from './component/add-book/Component';
-import SearchBook from './component/search/Component';
-import Rating from './component/rating/Component';
-import EditBook from './component/edit-book/Component'
-import Progress from './component/progress/Component'
-import Notes from './component/notes/Component'
+import Catalogue from './components/books-catalogue/Component'
+import AddBook from './components/add-book/Component';
+import SearchBook from './components/search/Component';
+import Rating from './components/rating/Component';
+import EditBook from './components/edit-book/Component'
+import Progress from './components/progress/Component'
+import Notes from './components/notes/Component'
+import NotesList from './components/notes/NotesList'
 
 
 
 function App() {
+
+
+  const [options, setOptions] = useState({
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  })
+
+
+  const [date, setDate] = useState({
+    dateFormat : new Date().toLocaleDateString('en-GB', options),
+    time: ("0" + new Date().getHours()).slice(-2) + ":" + ("0" + new Date().getMinutes()).slice(-2),
+  })
+ 
+  console.log("date", date)
+
+
   const [books, setBooks] = useState([
     // an object is a collection of 1) related data and 2) a container of primitive data type
     {
@@ -23,7 +41,7 @@ function App() {
       finishedPages: 10,
       progress: 0, 
       series: "A Trilogy of Desire",
-      note: "",
+      notes: [{noteId: 1, noteAuthor: "Dimitri", bookTitle: "The Financier", content: "blabla", date: date.dateFormat, time: date.time, bookPage: 205}, {noteId: 2, noteAuthor: "Anastasia", bookTitle: "The Financier", content: "bala", date: date.dateFormat, time: date.time, bookPage: 127}],
       year: 1986,
       rating: 0
     },
@@ -37,7 +55,7 @@ function App() {
       finishedPages: 0,
       progress: 0,
       series: "A Trilogy of Desire",
-      note: [{noteId: 1, content: "blabla", time: new Date(), author: "Dimitri", page: 195}, {noteId: 2, content: "bala"}],
+      notes: [{noteId: 1, noteAuthor: "Dimitri", bookTitle: "The Titan", content: "blabla", date: date.dateFormat, time: date.time, bookPage: 205}, {noteId: 2, noteAuthor: "Anastasia", bookTitle: "The Titan", content: "bala", date: date.dateFormat, time: date.time, bookPage: 127}],
       year: 1986,
       rating: 0
     },
@@ -51,7 +69,7 @@ function App() {
       finishedPages: 0,
       progress: 0,
       series: "A Trilogy of Desire",
-      note: "",
+      notes: [{noteId: 1, noteAuthor: "Dimitri", bookTitle: "The Stoic", content: "blabla", date: date.dateFormat, time: date.time, bookPage: 205}, {noteId: 2, noteAuthor: "Anastasia", bookTitle: "The Stoic", content: "bala", date: date.dateFormat, time: date.time, bookPage: 127}],
       year: 1986,
       rating: 0
     },
@@ -65,11 +83,12 @@ function App() {
       finishedPages: 0,
       progress: 0,
       series: "no series",
-      note: "",
+      notes: [{noteId: 1, noteAuthor: "Dimitri", bookTitle: "Fairy Tales", content: "blabla", date: date.dateFormat, time: date.time, bookPage: 205}, {noteId: 2, noteAuthor: "Anastasia", bookTitle: "Fairy Tales", content: "bala", date: date.dateFormat, time: date.time, bookPage: 127}],
       year: 1989,
       rating: 0
     },
   ])
+
 
   const [currentBook, setCurrentBook] = useState({
     id: 0,
@@ -127,7 +146,7 @@ function App() {
 
   const updateRating = ({ bookToRate, id }) => {
     setRate(false)
-    return setBooks(books.map(book => (book.id === bookToRate.id ? { ...book, rating: bookToRate.rating } : book)))
+    return setBooks(books.map(book => (book.id === id ? { ...book, rating: bookToRate.rating } : book)))
   }
 
   const [toggleProgress, setToggleProgress] = useState(false)
@@ -152,38 +171,29 @@ function App() {
     })
   }
 
-  
-
   const updateProgress = ({ bookInProgress, id }) => {
     console.log(bookInProgress)
     return setBooks(books.map(book =>
       (book.id === id ? { ...book, finishedPages: bookInProgress.finishedPages, progress: (Math.round((bookInProgress.finishedPages / bookInProgress.pages) * 100)) }: book)))
-
-    // return countProgress(books,id)
   }
 
-  // const [percent, setPercent] = useState(0)
 
-  // const countProgress = (books,id) => {
-  //   const result = books.map(book => (
-  //     book.id === id 
-  //     ? parseFloat((book.finishedPages * book.pages / 100) + " %")
-  //     : book
-  //   ))
-  //   console.log("result", result)
-  //   return parseFloat(setPercent())
-  // }
+ const [toggleNotes, setToggleNotes] = useState(false)
 
+ const [bookToNote, setBookToNote] = useState({
+  id: 0,
+  title: "",
+  notes: [{noteId: 0, noteAuthor: "", bookTitle: "", content: "", time: date.dateFormat,  bookPage: 0}],
+  currentDate: '',
+  currentTime: ''
+ })
 
-  const [allNotes, setAllNotes] = useState([
-    {
-      id: 1,
-      bookTitle: 'The Titan',
-      note: "The most informative book",
-    }
-  ])
+  const addNote = ({chosenBook}) => {
+   setToggleNotes(true)
+   return  setBookToNote({id: chosenBook.id, title: chosenBook.title, notes: chosenBook.notes, currentDate: date.dateFormat, currentTime: date.time})
+  }
 
-
+ console.log("book to note", bookToNote)
 
   return (
     <div className="App">
@@ -213,7 +223,7 @@ function App() {
                 editRow={editRow}
                 editRating={editRating}
                 editProgress={editProgress}
-                allNotes={allNotes}
+                addNote={addNote}
               />
 
             </div>
@@ -275,14 +285,35 @@ function App() {
       <SearchBook
         books={books}
       />
+     
+     <div>
+     { toggleNotes ? 
+     (
+         <Notes
+         books={books}
+         setBooks={setBooks}
+         setToggleNotes={setToggleNotes}
+         bookToNote={bookToNote}
+         setBookToNote={setBookToNote}
+         date={date}
+       />
+ 
+     ) : (
+        console.log("add notes")
+     )}
 
-      <Notes
-        books={books}
-        allNotes={allNotes}
-        setAllNotes={setAllNotes}
-      />
+     </div>
 
 
+     <div>
+       <NotesList
+       books={books}
+       setBooks={setBooks}
+       bookToNote={bookToNote}
+       setBookToNote={setBookToNote}
+       />
+     </div>
+     
 
     </div>
   );
