@@ -32,7 +32,6 @@ function NotesContainer({books, setBooks, setToggleNotes, bookToNote, setBookToN
 
     const addNewNote = ({newNote, bookToNote, setBookToNote}) => {
     const newNoteWId = {...newNote, noteId: bookToNote.notes.length + 1, date: currentDate(), time: currentTime()}
-    console.log("bookToNote", bookToNote)
     setNewNote({ 
         noteId: 0, 
         noteAuthor: "",

@@ -9,7 +9,6 @@ function NotesList({books, bookToNote}) {
  const notes = filteredBook.length > 0 ? filteredBook[0].notes : []
 
  
-console.log("notes from list", notes)
 
     return (
         <div>

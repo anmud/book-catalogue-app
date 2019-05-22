@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
+import {Route, Link, BrowserRouter as Router, Switch} from 'react-router-dom'
+import Home from './components/home/Home'
 import Catalogue from './components/books-catalogue/Component'
 import AddBook from './components/add-book/Component';
 import SearchBook from './components/search/Component';
@@ -8,6 +10,7 @@ import EditBook from './components/edit-book/Component'
 import Progress from './components/progress/Component'
 import Notes from './components/notes/Component'
 import NotesList from './components/notes/NotesList'
+
 
 
 // default assignment
@@ -193,14 +196,6 @@ function App() {
   currentTime: ''
  })
 
-//  const editBookToNote = chosenBook => {
-//   return setBookToNote({
-//     ...bookToNote,
-//     id: chosenBook.id,
-//     title: chosenBook.title,
-//     notes: chosenBook.notes,
-//  })
-// }
 
   const addNote = ({chosenBook}) => {
    setToggleNotes(true)
@@ -208,10 +203,63 @@ function App() {
  
   }
 
- console.log("book to note", bookToNote)
 
   return (
     <div className="App">
+
+
+   <Router>
+
+   <div>
+         
+            <ul>
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+              <li>
+                <Link to="/catalogue">Book Catalogue</Link>
+              </li>
+              <li>
+                <Link to="/add">Add a Book</Link>
+              </li>
+              <li>
+                <Link to="/search">Search</Link>
+              </li>
+              
+            </ul>
+          
+        </div>
+   <Switch>
+        <Route exact path="/" render={ () => { return  <Home/>}}/>
+        <Route path="/catalogue" render={ () => {
+           return  (
+                <Catalogue
+                books={books}
+                setBooks={setBooks}
+                editRow={editRow}
+                editRating={editRating}
+                rate={rate}
+                setRate={setRate}
+                updateRating={updateRating}
+                bookToRate={bookToRate}
+                setBookToRate={setBookToRate}
+                editProgress={editProgress}
+                addNote={addNote}
+                />)
+                }}/>
+       
+        <Route path="/add" render={ () => {
+          return (
+              <AddBook
+                books={books}
+                setBooks={setBooks}
+              />)
+        }}/>
+        <Route path="/search" render={ () => { return <SearchBook books={books} />}}/>
+       
+</Switch>
+
+</Router>
 
       <div>
         {rate ? (
@@ -230,19 +278,7 @@ function App() {
 
         ) : (
 
-            <div>
-
-              <Catalogue
-                books={books}
-                setBooks={setBooks}
-                editRow={editRow}
-                editRating={editRating}
-                editProgress={editProgress}
-                addNote={addNote}
-              />
-
-            </div>
-
+          console.log("not found")
           )
 
         }
@@ -272,7 +308,7 @@ function App() {
 
 
 
-      <div>
+      {/* <div>
         {editing ? (
 
           <div>
@@ -295,11 +331,11 @@ function App() {
             </div>
 
           )}
-      </div>
+      </div> */}
 
-      <SearchBook
+      {/* <SearchBook
         books={books}
-      />
+      /> */}
      
      <div>
      { toggleNotes ? 
@@ -318,7 +354,7 @@ function App() {
 
      </div>
 
-
+{/* 
      <div>
        <NotesList
        books={books}
@@ -326,9 +362,19 @@ function App() {
        bookToNote={bookToNote}
        setBookToNote={setBookToNote}
        />
-     </div>
-     
-
+     </div> */}
+       { editing ? (
+       <EditBook
+              editing={editing}
+              setEditing={setEditing}
+              currentBook={currentBook}
+              setCurrentBook={setCurrentBook}
+              updateBook={updateBook}
+            />)
+            : (
+              console.log("not found")
+            )
+       }
     </div>
   );
 }

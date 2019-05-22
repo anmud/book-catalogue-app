@@ -1,7 +1,7 @@
 import React  from 'react';
 
 
-function Catalogue(props) {
+function Catalogue(props, {match}) {
   // CRUD - Create, Read, Update, Delete
   // Create: setState()
   // Read: render()
@@ -16,7 +16,7 @@ function Catalogue(props) {
 
  // })
 
- const {books, setBooks, editRow, editRating, editProgress, addNote } = props
+ const {books, setBooks, editRow, editRating, editProgress, addNote,  } = props
 
  const deleteBook = ({ books, bookId }) => {
   return setBooks(books.filter(book => book.id !== bookId))
@@ -74,7 +74,7 @@ function Catalogue(props) {
     </tbody>
   </table>
    
-
+  
 
  
     </div>
