@@ -10,25 +10,21 @@ import Notes from './components/notes/Component'
 import NotesList from './components/notes/NotesList'
 
 
+// default assignment
+// if d is not proived as an argument to a function use the value aufter the equal sign "="
+const currentDate = (d = new Date()) => 
+  d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
+
+
+// default assignment
+// if d is not proived as an argument to a function use the value aufter the equal sign "="
+const currentTime = (d = new Date()) =>
+("0" + new Date().getHours()).slice(-2) + ":" + ("0" + new Date().getMinutes()).slice(-2)
+
+
 
 function App() {
-
-
-  const [options, setOptions] = useState({
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric'
-  })
-
-
-  const [date, setDate] = useState({
-    dateFormat : new Date().toLocaleDateString('en-GB', options),
-    time: ("0" + new Date().getHours()).slice(-2) + ":" + ("0" + new Date().getMinutes()).slice(-2),
-  })
- 
-  console.log("date", date)
-
-
+  
   const [books, setBooks] = useState([
     // an object is a collection of 1) related data and 2) a container of primitive data type
     {
@@ -41,7 +37,7 @@ function App() {
       finishedPages: 10,
       progress: 0, 
       series: "A Trilogy of Desire",
-      notes: [{noteId: 1, noteAuthor: "Dimitri", bookTitle: "The Financier", content: "blabla", date: date.dateFormat, time: date.time, bookPage: 205}, {noteId: 2, noteAuthor: "Anastasia", bookTitle: "The Financier", content: "bala", date: date.dateFormat, time: date.time, bookPage: 127}],
+      notes: [{noteId: 1, noteAuthor: "Dimitri",  content: "blabla", date: "2019-5-21", time: "09:53", bookPage: 205}, {noteId: 2, noteAuthor: "Anastasia", content: "bala", date: "2019-4-20", time: "05:45", bookPage: 127}],
       year: 1986,
       rating: 0
     },
@@ -55,7 +51,7 @@ function App() {
       finishedPages: 0,
       progress: 0,
       series: "A Trilogy of Desire",
-      notes: [{noteId: 1, noteAuthor: "Dimitri", bookTitle: "The Titan", content: "blabla", date: date.dateFormat, time: date.time, bookPage: 205}, {noteId: 2, noteAuthor: "Anastasia", bookTitle: "The Titan", content: "bala", date: date.dateFormat, time: date.time, bookPage: 127}],
+      notes: [{noteId: 1, noteAuthor: "Dimitri",  content: "blabla", date: "2019-5-18", time: "08:55", bookPage: 205}, {noteId: 2, noteAuthor: "Anastasia",  content: "bala", date: "2017-2-23", time: "10:24", bookPage: 127}],
       year: 1986,
       rating: 0
     },
@@ -69,7 +65,7 @@ function App() {
       finishedPages: 0,
       progress: 0,
       series: "A Trilogy of Desire",
-      notes: [{noteId: 1, noteAuthor: "Dimitri", bookTitle: "The Stoic", content: "blabla", date: date.dateFormat, time: date.time, bookPage: 205}, {noteId: 2, noteAuthor: "Anastasia", bookTitle: "The Stoic", content: "bala", date: date.dateFormat, time: date.time, bookPage: 127}],
+      notes: [{noteId: 1, noteAuthor: "Dimitri",  content: "blabla", date: "2018-11-19", time: "15:39", bookPage: 205}, {noteId: 2, noteAuthor: "Anastasia", content: "bala", date: "2019-5-14", time: "12:45", bookPage: 127}],
       year: 1986,
       rating: 0
     },
@@ -83,7 +79,7 @@ function App() {
       finishedPages: 0,
       progress: 0,
       series: "no series",
-      notes: [{noteId: 1, noteAuthor: "Dimitri", bookTitle: "Fairy Tales", content: "blabla", date: date.dateFormat, time: date.time, bookPage: 205}, {noteId: 2, noteAuthor: "Anastasia", bookTitle: "Fairy Tales", content: "bala", date: date.dateFormat, time: date.time, bookPage: 127}],
+      notes: [{noteId: 1, noteAuthor: "Dimitri",  content: "blabla", date: "2019-10-10", time: "10:15", bookPage: 205}, {noteId: 2, noteAuthor: "Anastasia", content: "bala", date: "2019-6-12", time: "09:14", bookPage: 127}],
       year: 1989,
       rating: 0
     },
@@ -98,7 +94,10 @@ function App() {
     volume: '',
     series: "",
     year: 0,
-    rating: 0
+    rating: 0,
+    pages: 0,
+    finishedPages: 0,
+    progress: 0
   })
 
   const [editing, setEditing] = useState(false)
@@ -120,7 +119,10 @@ function App() {
       volume: book.volume,
       series: book.series,
       year: book.year,
-      rating: book.rating
+      rating: book.rating,
+      pages: book.pages,
+      finishedPages: book.finishedPages,
+      progress: book.progress,
     })
   }
 
@@ -157,6 +159,7 @@ function App() {
     title: " ",
     pages: 0,
     finishedPages: 0,
+    progress: 0,
   })
 
   const editProgress = book => {
@@ -168,6 +171,7 @@ function App() {
       title: book.title,
       pages: book.pages,
       finishedPages: book.finishedPages,
+      progress: book.progress
     })
   }
 
@@ -180,17 +184,28 @@ function App() {
 
  const [toggleNotes, setToggleNotes] = useState(false)
 
+
  const [bookToNote, setBookToNote] = useState({
   id: 0,
   title: "",
-  notes: [{noteId: 0, noteAuthor: "", bookTitle: "", content: "", time: date.dateFormat,  bookPage: 0}],
+  notes: [{noteId: 0, noteAuthor: "", bookTitle: "", content: "", date: '', time: "",  bookPage: 0}],
   currentDate: '',
   currentTime: ''
  })
 
+//  const editBookToNote = chosenBook => {
+//   return setBookToNote({
+//     ...bookToNote,
+//     id: chosenBook.id,
+//     title: chosenBook.title,
+//     notes: chosenBook.notes,
+//  })
+// }
+
   const addNote = ({chosenBook}) => {
    setToggleNotes(true)
-   return  setBookToNote({id: chosenBook.id, title: chosenBook.title, notes: chosenBook.notes, currentDate: date.dateFormat, currentTime: date.time})
+   return  setBookToNote({id: chosenBook.id, title: chosenBook.title, notes: chosenBook.notes, currentDate: currentDate(), currentTime: currentTime()})
+ 
   }
 
  console.log("book to note", bookToNote)
@@ -295,7 +310,6 @@ function App() {
          setToggleNotes={setToggleNotes}
          bookToNote={bookToNote}
          setBookToNote={setBookToNote}
-         date={date}
        />
  
      ) : (

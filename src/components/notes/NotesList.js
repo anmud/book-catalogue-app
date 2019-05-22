@@ -9,6 +9,7 @@ function NotesList({books, bookToNote}) {
  const notes = filteredBook.length > 0 ? filteredBook[0].notes : []
 
  
+console.log("notes from list", notes)
 
     return (
         <div>
@@ -27,7 +28,7 @@ function NotesList({books, bookToNote}) {
                   </tr>
                 </thead>
                 <tbody>
-                { notes.length > 0 ?
+                { notes.length >= 0 ?
                     ( notes.map(note => 
                     (<tr key={note.noteId}>
                     <td>{note.noteId}</td>

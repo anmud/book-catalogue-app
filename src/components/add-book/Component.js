@@ -12,6 +12,10 @@ function AddBook({books, setBooks}) {
     series: "",
     year: "",
     rating: 0,
+    pages: 0,
+    finishedPages: 0,
+    progress: 0,
+    notes: [],
   })
 
 const handleInputChange = (event) => {
@@ -56,10 +60,14 @@ return  setBooks([...books, newBook])
   <label>Year</label>
   <input type="text" name="year" value={newBook.year} onChange={handleInputChange} />
 <br/>
+<label>Number of pages</label>
+  <input type="text" name="pages" value={newBook.pages} onChange={handleInputChange} />
+<br/>
   <button type="submit"> Add </button>
  
 </form>
 <hr/>
+
 
  
     </div>
