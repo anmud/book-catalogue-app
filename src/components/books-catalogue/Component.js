@@ -1,7 +1,7 @@
 import React  from 'react';
+import { Link, } from 'react-router-dom'
 
-
-function Catalogue(props, {match}) {
+function Catalogue(props) {
   // CRUD - Create, Read, Update, Delete
   // Create: setState()
   // Read: render()
@@ -16,7 +16,7 @@ function Catalogue(props, {match}) {
 
  // })
 
- const {books, setBooks, editRow, editRating, editProgress, addNote,  } = props
+ const {books, setBooks, editRow, editRating, editProgress, addNote } = props
 
  const deleteBook = ({ books, bookId }) => {
   return setBooks(books.filter(book => book.id !== bookId))
@@ -57,12 +57,12 @@ function Catalogue(props, {match}) {
         <td>{book.rating}</td>
      
         <td>
-          <button onClick={() => editRow(book)}>Edit</button>
-          <button onClick={()=>deleteBook({books: books, bookId: book.id})}>Delete</button>
-          <button onClick={() => editRating(book)}>Rate</button>
-          <button onClick={() => editProgress(book)}>Set progress</button>
-          <button onClick={() => addNote({books: books, chosenBook: book})}>Add note</button>
-        
+          <Link to="/edit"><button onClick={() => editRow(book)}>Edit</button></Link> 
+         <button onClick={()=>deleteBook({books: books, bookId: book.id})}>Delete</button>
+          <Link to="/rate"><button onClick={() => editRating(book)}>Rate</button></Link>
+         <Link to="/progress"><button onClick={() => editProgress(book)}>Set progress</button></Link>
+          <Link to="/notes"><button onClick={() => addNote({books: books, chosenBook: book})}>Add note</button></Link>
+       
         </td>
       </tr>
         ))
@@ -73,12 +73,13 @@ function Catalogue(props, {match}) {
     )}
     </tbody>
   </table>
-   
-  
+
+
 
  
     </div>
   );
 }
+
 
 export default Catalogue;

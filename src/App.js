@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
-import {Route, Link, BrowserRouter as Router, Switch} from 'react-router-dom'
+import { Route, Link, BrowserRouter as Router, Switch } from 'react-router-dom'
 import Home from './components/home/Home'
 import Catalogue from './components/books-catalogue/Component'
 import AddBook from './components/add-book/Component';
@@ -13,21 +13,29 @@ import NotesList from './components/notes/NotesList'
 
 
 
+
+
+import { createBrowserHistory } from "history"
+export const history = createBrowserHistory()
+
+
+
+
 // default assignment
 // if d is not proived as an argument to a function use the value aufter the equal sign "="
-const currentDate = (d = new Date()) => 
+const currentDate = (d = new Date()) =>
   d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
 
 
 // default assignment
 // if d is not proived as an argument to a function use the value aufter the equal sign "="
 const currentTime = (d = new Date()) =>
-("0" + new Date().getHours()).slice(-2) + ":" + ("0" + new Date().getMinutes()).slice(-2)
+  ("0" + new Date().getHours()).slice(-2) + ":" + ("0" + new Date().getMinutes()).slice(-2)
 
 
 
 function App() {
-  
+
   const [books, setBooks] = useState([
     // an object is a collection of 1) related data and 2) a container of primitive data type
     {
@@ -38,9 +46,9 @@ function App() {
       volume: 3,
       pages: 350,
       finishedPages: 10,
-      progress: 0, 
+      progress: 0,
       series: "A Trilogy of Desire",
-      notes: [{noteId: 1, noteAuthor: "Dimitri",  content: "blabla", date: "2019-5-21", time: "09:53", bookPage: 205}, {noteId: 2, noteAuthor: "Anastasia", content: "bala", date: "2019-4-20", time: "05:45", bookPage: 127}],
+      notes: [{ noteId: 1, noteAuthor: "Dimitri", content: "blabla", date: "2019-5-21", time: "09:53", bookPage: 205 }, { noteId: 2, noteAuthor: "Anastasia", content: "bala", date: "2019-4-20", time: "05:45", bookPage: 127 }],
       year: 1986,
       rating: 0
     },
@@ -54,7 +62,7 @@ function App() {
       finishedPages: 0,
       progress: 0,
       series: "A Trilogy of Desire",
-      notes: [{noteId: 1, noteAuthor: "Dimitri",  content: "blabla", date: "2019-5-18", time: "08:55", bookPage: 205}, {noteId: 2, noteAuthor: "Anastasia",  content: "bala", date: "2017-2-23", time: "10:24", bookPage: 127}],
+      notes: [{ noteId: 1, noteAuthor: "Dimitri", content: "blabla", date: "2019-5-18", time: "08:55", bookPage: 205 }, { noteId: 2, noteAuthor: "Anastasia", content: "bala", date: "2017-2-23", time: "10:24", bookPage: 127 }],
       year: 1986,
       rating: 0
     },
@@ -68,7 +76,7 @@ function App() {
       finishedPages: 0,
       progress: 0,
       series: "A Trilogy of Desire",
-      notes: [{noteId: 1, noteAuthor: "Dimitri",  content: "blabla", date: "2018-11-19", time: "15:39", bookPage: 205}, {noteId: 2, noteAuthor: "Anastasia", content: "bala", date: "2019-5-14", time: "12:45", bookPage: 127}],
+      notes: [{ noteId: 1, noteAuthor: "Dimitri", content: "blabla", date: "2018-11-19", time: "15:39", bookPage: 205 }, { noteId: 2, noteAuthor: "Anastasia", content: "bala", date: "2019-5-14", time: "12:45", bookPage: 127 }],
       year: 1986,
       rating: 0
     },
@@ -82,7 +90,7 @@ function App() {
       finishedPages: 0,
       progress: 0,
       series: "no series",
-      notes: [{noteId: 1, noteAuthor: "Dimitri",  content: "blabla", date: "2019-10-10", time: "10:15", bookPage: 205}, {noteId: 2, noteAuthor: "Anastasia", content: "bala", date: "2019-6-12", time: "09:14", bookPage: 127}],
+      notes: [{ noteId: 1, noteAuthor: "Dimitri", content: "blabla", date: "2019-10-10", time: "10:15", bookPage: 205 }, { noteId: 2, noteAuthor: "Anastasia", content: "bala", date: "2019-6-12", time: "09:14", bookPage: 127 }],
       year: 1989,
       rating: 0
     },
@@ -108,6 +116,7 @@ function App() {
 
   const updateBook = ({ currentBook, id }) => {
     setEditing(false)
+    history.goBack()
     return setBooks(books.map(book => (book.id === id ? currentBook : book)))
   }
 
@@ -151,6 +160,7 @@ function App() {
 
   const updateRating = ({ bookToRate, id }) => {
     setRate(false)
+    history.goBack()
     return setBooks(books.map(book => (book.id === id ? { ...book, rating: bookToRate.rating } : book)))
   }
 
@@ -179,61 +189,53 @@ function App() {
   }
 
   const updateProgress = ({ bookInProgress, id }) => {
-    console.log(bookInProgress)
+    setToggleProgress(false)
+    history.goBack()
     return setBooks(books.map(book =>
-      (book.id === id ? { ...book, finishedPages: bookInProgress.finishedPages, progress: (Math.round((bookInProgress.finishedPages / bookInProgress.pages) * 100)) }: book)))
+      (book.id === id ? { ...book, finishedPages: bookInProgress.finishedPages, progress: (Math.round((bookInProgress.finishedPages / bookInProgress.pages) * 100)) } : book)))
   }
 
 
- const [toggleNotes, setToggleNotes] = useState(false)
+  const [toggleNotes, setToggleNotes] = useState(false)
+
+  const [bookToNote, setBookToNote] = useState({
+    id: 0,
+    title: "",
+    notes: [{ noteId: 0, noteAuthor: "", bookTitle: "", content: "", date: '', time: "", bookPage: 0 }],
+    currentDate: '',
+    currentTime: ''
+  })
 
 
- const [bookToNote, setBookToNote] = useState({
-  id: 0,
-  title: "",
-  notes: [{noteId: 0, noteAuthor: "", bookTitle: "", content: "", date: '', time: "",  bookPage: 0}],
-  currentDate: '',
-  currentTime: ''
- })
+  const addNote = ({ chosenBook }) => {
+    setToggleNotes(true)
+    return setBookToNote({ id: chosenBook.id, title: chosenBook.title, notes: chosenBook.notes, currentDate: currentDate(), currentTime: currentTime() })
 
-
-  const addNote = ({chosenBook}) => {
-   setToggleNotes(true)
-   return  setBookToNote({id: chosenBook.id, title: chosenBook.title, notes: chosenBook.notes, currentDate: currentDate(), currentTime: currentTime()})
- 
   }
+
+
 
 
   return (
     <div className="App">
 
 
-   <Router>
+      <Router>
 
-   <div>
-         
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              <li>
-                <Link to="/catalogue">Book Catalogue</Link>
-              </li>
-              <li>
-                <Link to="/add">Add a Book</Link>
-              </li>
-              <li>
-                <Link to="/search">Search</Link>
-              </li>
-              
-            </ul>
-          
+        <div>
+          <ul>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/catalogue">Book Catalogue</Link></li>
+            <li><Link to="/add">Add a Book</Link></li>
+            <li><Link to="/search">Search</Link></li>
+          </ul>
         </div>
-   <Switch>
-        <Route exact path="/" render={ () => { return  <Home/>}}/>
-        <Route path="/catalogue" render={ () => {
-           return  (
-                <Catalogue
+
+        <Switch>
+          <Route exact path="/" render={() => { return <Home /> }} />
+          <Route path="/catalogue" render={() => {
+            return (
+              <Catalogue
                 books={books}
                 setBooks={setBooks}
                 editRow={editRow}
@@ -245,23 +247,86 @@ function App() {
                 setBookToRate={setBookToRate}
                 editProgress={editProgress}
                 addNote={addNote}
-                />)
-                }}/>
-       
-        <Route path="/add" render={ () => {
-          return (
-              <AddBook
+              />)
+          }}/>
+
+          <Route path="/add" render={() => {
+            return (
+                <AddBook
                 books={books}
                 setBooks={setBooks}
               />)
-        }}/>
-        <Route path="/search" render={ () => { return <SearchBook books={books} />}}/>
-       
-</Switch>
+          }} />
+          
+          <Route path="/search" render={() => { return <SearchBook books={books} /> }} />
 
-</Router>
+        </Switch>
+
+      </Router>
+
 
       <div>
+        <hr />
+
+        {editing ? (
+          <EditBook
+            editing={editing}
+            setEditing={setEditing}
+            currentBook={currentBook}
+            setCurrentBook={setCurrentBook}
+            updateBook={updateBook}
+
+          />)
+          : (
+            console.log("Page is not found")
+          )
+        }
+
+        {toggleProgress ? (
+          <div>
+            <Progress
+              bookInProgress={bookInProgress}
+              setBookInProgress={setBookInProgress}
+              updateProgress={updateProgress}
+              books={books}
+              setToggleProgress={setToggleProgress}
+            />
+          </div>
+          ) : (
+              console.log("Update your progress")
+
+            )}
+
+        {toggleNotes ?
+          (
+          <div>
+
+              <div>
+                <NotesList
+                  books={books}
+                  bookToNote={bookToNote}
+                  setBookToNote={setBookToNote}
+                  setToggleNotes={setToggleNotes}
+                />
+              </div>
+             <div>
+                <Notes
+                  books={books}
+                  setBooks={setBooks}
+                  setToggleNotes={setToggleNotes}
+                  bookToNote={bookToNote}
+                  setBookToNote={setBookToNote}
+                />
+             </div>
+
+            
+          </div>
+
+        ) : (
+                  console.log("Page is not found")
+                )
+          }
+
         {rate ? (
 
           <div>
@@ -275,106 +340,13 @@ function App() {
               setBookToRate={setBookToRate}
             />
           </div>
-
         ) : (
-
-          console.log("not found")
-          )
-
-        }
-
-      </div>
-
-      <div>
-        {
-          toggleProgress ? (
-            <div>
-              <Progress
-                bookInProgress={bookInProgress}
-                setBookInProgress={setBookInProgress}
-                updateProgress={updateProgress}
-                books={books}
-              />
-            </div>
-
-          ) : (
-
-              console.log("Update your progress")
-
-            )}
-
-      </div>
-
-
-
-
-      {/* <div>
-        {editing ? (
-
-          <div>
-            <EditBook
-              editing={editing}
-              setEditing={setEditing}
-              currentBook={currentBook}
-              setCurrentBook={setCurrentBook}
-              updateBook={updateBook}
-            />
-          </div>
-
-        ) : (
-
-            <div>
-              <AddBook
-                books={books}
-                setBooks={setBooks}
-              />
-            </div>
-
+            console.log("Page is not found")
           )}
-      </div> */}
+      </div>
 
-      {/* <SearchBook
-        books={books}
-      /> */}
-     
-     <div>
-     { toggleNotes ? 
-     (
-         <Notes
-         books={books}
-         setBooks={setBooks}
-         setToggleNotes={setToggleNotes}
-         bookToNote={bookToNote}
-         setBookToNote={setBookToNote}
-       />
- 
-     ) : (
-        console.log("add notes")
-     )}
 
-     </div>
 
-{/* 
-     <div>
-       <NotesList
-       books={books}
-       setBooks={setBooks}
-       bookToNote={bookToNote}
-       setBookToNote={setBookToNote}
-       />
-     </div> */}
-       { editing ? (
-       <EditBook
-              editing={editing}
-              setEditing={setEditing}
-              currentBook={currentBook}
-              setCurrentBook={setCurrentBook}
-              updateBook={updateBook}
-            />)
-            : (
-              console.log("not found")
-            )
-       }
     </div>
   );
 }

@@ -1,22 +1,25 @@
 import React  from 'react';
-
+import {history} from "../../App"
 
 function EditBook(props) {
   
-    const { currentBook, setCurrentBook,  setEditing, updateBook } = props
+    const { currentBook, setCurrentBook, updateBook } = props
 
     const handleInputChange = (event) => {
         const { name, value } = event.target
         setCurrentBook({ ...currentBook, [name]: value })
     }
 
-  return (
+
+
+ return (
       <div className="App">
           <h1>Update a book </h1>
           <form
               onSubmit={event => {
                   event.preventDefault();
                   updateBook({ currentBook: currentBook, id: currentBook.id })
+                  
               }}
           >
               <label>Author</label>
@@ -44,9 +47,9 @@ function EditBook(props) {
               <br />
 
               <button> Update </button>
-              <button onClick={() => setEditing(false)}> Cancel </button>
+              <button onClick={() => history.goBack() } > Cancel </button>
           </form>
-          <hr />
+          
 
 
       </div>

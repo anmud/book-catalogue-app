@@ -1,14 +1,39 @@
-import React from 'react';
+import React, {useState} from 'react';
+import {history} from '../../App'
+import EditNote from './EditNote';
 
 
-
-function NotesList({books, bookToNote}) {
+function NotesList({books, bookToNote, setBookToNote, setToggleNotes}) {
 
  const filteredBook =  books.filter(book => bookToNote.id === book.id)
 
  const notes = filteredBook.length > 0 ? filteredBook[0].notes : []
 
- 
+
+const [toggleNoteEdit, setNoteEdit] = useState(false)
+
+ const [currentNote, setCurrentNote]= useState({
+  noteId: 0,
+  noteAuthor: "",
+  content: "",
+  bookPage: 0,
+  date: "",
+  time: ""
+ })
+
+ const editNote = note => {
+   setNoteEdit(true)
+
+   return setCurrentNote({
+     ...currentNote,
+     noteId: note.noteId,
+     noteAuthor: note.noteAutor,
+     content: note.content,
+     bookPage: note.bookPage,
+     date: note.date,
+     time: note.time
+   })
+ }
 
     return (
         <div>
@@ -38,7 +63,7 @@ function NotesList({books, bookToNote}) {
                     <td>{note.date}</td>
                     <td>{note.time}</td>
                     <td>
-                      <button >Edit</button>
+                      <button onClick={() => editNote(note)}>Edit</button>
                       <button >Delete</button>
                     </td>
                   </tr>
@@ -51,8 +76,34 @@ function NotesList({books, bookToNote}) {
                    }
                 </tbody>
               </table>
+              <br/>
+              <br/>
+              <button onClick={() => {
+                history.goBack()
+                setToggleNotes(false)
+              }}>Back to catalogue</button>
         </div>
 
+
+
+     { toggleNoteEdit ? (
+       <div>
+       <EditNote
+       currentNote={currentNote}
+       setCurrentNote={setCurrentNote}
+       toggleNoteEdit={toggleNoteEdit}
+       setNoteEdit={setNoteEdit}
+       notes={notes}
+       books={books}
+       bookToNote={bookToNote}
+       setBookToNote={setBookToNote}
+       />
+     </div>
+     ) : (
+       console.log("Page is not found")
+     )
+    }
+      
        
        </div> 
     );

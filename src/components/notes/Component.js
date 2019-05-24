@@ -1,5 +1,5 @@
 import React  from 'react';
-import NotesContainer from './NotesContainer'
+import AddNote from './AddNote'
 
 
 function Notes({ books, setBooks, setToggleNotes, bookToNote, setBookToNote }) {
@@ -9,16 +9,16 @@ function Notes({ books, setBooks, setToggleNotes, bookToNote, setBookToNote }) {
     return (
         <div>
 
-            <NotesContainer
+            <AddNote
                 books={books}
                 setBooks={setBooks}
                 setToggleNotes={setToggleNotes}
                 bookToNote={bookToNote}
                 setBookToNote={setBookToNote}
             />
-
-           
-
+       
+          
+            
         </div>
     );
 }

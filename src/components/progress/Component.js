@@ -1,8 +1,8 @@
 import React  from 'react';
+import {history} from "../../App"
 
 
-
-function Progress({bookInProgress, setBookInProgress, updateProgress, books,   }) {
+function Progress({bookInProgress, setBookInProgress, updateProgress, books, setToggleProgress  }) {
   
 const handleInputChange = event => {
     const {name, value} = event.target
@@ -23,7 +23,10 @@ const handleInputChange = event => {
 
      <input type="text" name="finishedPages" value={bookInProgress.finishedPages} onChange={handleInputChange} />
      <button onClick={() => updateProgress({bookInProgress: bookInProgress, id: bookInProgress.id})}>Update progress</button>
-    
+     <button onClick={() => {
+       setToggleProgress(false)
+       history.goBack()
+      }}> Cancel</button>
 
 
      <p>You've already read {bookInProgress.finishedPages} from {bookInProgress.pages} pages, percentage of {Math.round((bookInProgress.finishedPages / bookInProgress.pages) * 100) + "%"}</p>

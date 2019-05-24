@@ -66,7 +66,7 @@ return  setBooks([...books, newBook])
   <button type="submit"> Add </button>
  
 </form>
-<hr/>
+
 
 
  
