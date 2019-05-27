@@ -1,39 +1,23 @@
-import React, {useState} from 'react';
-import {history} from '../../App'
-import EditNote from './EditNote';
+import React from 'react';
 
 
-function NotesList({books, bookToNote, setBookToNote, setToggleNotes}) {
 
- const filteredBook =  books.filter(book => bookToNote.id === book.id)
-
- const notes = filteredBook.length > 0 ? filteredBook[0].notes : []
+function NotesList({ books, setBooks,  bookToNote, setBookToNote, editNote}) {
 
 
-const [toggleNoteEdit, setNoteEdit] = useState(false)
+  const filteredBook = books.filter(book => bookToNote.id === book.id)
 
- const [currentNote, setCurrentNote]= useState({
-  noteId: 0,
-  noteAuthor: "",
-  content: "",
-  bookPage: 0,
-  date: "",
-  time: ""
- })
+  const notes = filteredBook.length > 0 ? filteredBook[0].notes : []
 
- const editNote = note => {
-   setNoteEdit(true)
+  const deleteNote = ({  notes, id }) => {
+    const filteredNotes = bookToNote.notes.filter(note => note.noteId !== id)
+    console.log('filtered', filteredNotes)
+     setBookToNote({...bookToNote, notes: [...filteredNotes] }) 
+     console.log("book", bookToNote)
+     return  setBooks(books.map(book => book.id === bookToNote.id ? ({...book, notes: [...filteredNotes] }) : book))
 
-   return setCurrentNote({
-     ...currentNote,
-     noteId: note.noteId,
-     noteAuthor: note.noteAutor,
-     content: note.content,
-     bookPage: note.bookPage,
-     date: note.date,
-     time: note.time
-   })
- }
+   }
+
 
     return (
         <div>
@@ -64,7 +48,7 @@ const [toggleNoteEdit, setNoteEdit] = useState(false)
                     <td>{note.time}</td>
                     <td>
                       <button onClick={() => editNote(note)}>Edit</button>
-                      <button >Delete</button>
+                      <button onClick={() => deleteNote({id: note.noteId, notes: notes})}>Delete</button>
                     </td>
                   </tr>
                     ))
@@ -78,32 +62,8 @@ const [toggleNoteEdit, setNoteEdit] = useState(false)
               </table>
               <br/>
               <br/>
-              <button onClick={() => {
-                history.goBack()
-                setToggleNotes(false)
-              }}>Back to catalogue</button>
         </div>
 
-
-
-     { toggleNoteEdit ? (
-       <div>
-       <EditNote
-       currentNote={currentNote}
-       setCurrentNote={setCurrentNote}
-       toggleNoteEdit={toggleNoteEdit}
-       setNoteEdit={setNoteEdit}
-       notes={notes}
-       books={books}
-       bookToNote={bookToNote}
-       setBookToNote={setBookToNote}
-       />
-     </div>
-     ) : (
-       console.log("Page is not found")
-     )
-    }
-      
        
        </div> 
     );

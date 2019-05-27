@@ -1,29 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { history } from "../../App"
 
 
-function EditNote({ books, setBooks, bookToNote,setBookToNote, currentNote, setCurrentNote, toggleNoteEdit, setNoteEdit, notes }) {
+function EditNote({ bookToNote, currentNote, setCurrentNote,  updateCurrentNote, setToggleNotes }) {
 
     const handleChange = event => {
         const { name, value } = event.target
         return setCurrentNote({ ...currentNote, [name]: value })
     }
-
-
-    const updateCurrentNote = ({ currentNote, notes }) => {
-        setNoteEdit(false)
-        console.log("current note", currentNote)
-        console.log("notes", notes)
-       
-    const updatedNotes =  notes.map(note => note.noteId === currentNote.noteId 
-        ? currentNote
-        : note
-        ) 
-      console.log("updated notes", updatedNotes)
-      setBookToNote({ ...bookToNote, notes: [...bookToNote.notes, updatedNotes] })
-      console.log('book to note with updated notes', bookToNote)
-     // return setBooks(books.map(book => book.id === bookToNote.id ? ({ ...book, notes: [...book.notes, newNoteWId] }) : book))
-     }
 
 
     return (
@@ -35,7 +19,7 @@ function EditNote({ books, setBooks, bookToNote,setBookToNote, currentNote, setC
 
                 <form onSubmit={event => {
                     event.preventDefault()
-                    updateCurrentNote({currentNote: currentNote, notes: notes})
+                    updateCurrentNote({currentNote: currentNote, notes: bookToNote.notes})
                 }}>
 
                     <div>
@@ -71,13 +55,14 @@ function EditNote({ books, setBooks, bookToNote,setBookToNote, currentNote, setC
                     <br />
                     <button type="submit">Update</button>
                     <button onClick={() => {
-                        // setToggleNotes(false)
-                        // history.goBack()
+                        setToggleNotes(false)
+                        history.goBack()
                     }}>Cancel</button>
                 </form>
            
             </div>
-
+      
+            <pre>{JSON.stringify(currentNote, null, 4)}</pre>
 
         </div>
     );

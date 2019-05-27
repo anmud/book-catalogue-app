@@ -42,7 +42,7 @@ function AddNote({ books, setBooks, setToggleNotes, bookToNote, setBookToNote })
             time: ""
         })
         setBookToNote({ ...bookToNote, notes: [...bookToNote.notes, newNoteWId] })
-        return setBooks(books.map(book => book.id === bookToNote.id ? ({ ...book, notes: [...book.notes, newNoteWId] }) : book))
+        return setBooks(books.map(book => book.id === bookToNote.id ?  ({ ...book, notes: [...book.notes, newNoteWId] })  : book))
     }
 
 

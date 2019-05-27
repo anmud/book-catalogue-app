@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import { Route, Link, BrowserRouter as Router, Switch } from 'react-router-dom'
-import Home from './components/home/Home'
+import Home from './components/home-page/Home'
 import Catalogue from './components/books-catalogue/Component'
 import AddBook from './components/add-book/Component';
 import SearchBook from './components/search/Component';
@@ -9,7 +9,7 @@ import Rating from './components/rating/Component';
 import EditBook from './components/edit-book/Component'
 import Progress from './components/progress/Component'
 import Notes from './components/notes/Component'
-import NotesList from './components/notes/NotesList'
+
 
 
 
@@ -300,15 +300,6 @@ function App() {
         {toggleNotes ?
           (
           <div>
-
-              <div>
-                <NotesList
-                  books={books}
-                  bookToNote={bookToNote}
-                  setBookToNote={setBookToNote}
-                  setToggleNotes={setToggleNotes}
-                />
-              </div>
              <div>
                 <Notes
                   books={books}
