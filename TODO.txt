@@ -1,0 +1,28 @@
+1. Connect to graphql and implement basic queries:
+
+mutation addbook {
+  addBook(input: {
+    title: "Book 3"
+    author: "Author 3"
+    collection: "no collection"
+    volume: "no volume"
+    rating: 10
+    finishedPages:50
+    pages: 500
+    year: "2019"
+  })
+}
+
+query getBooks {
+  getBooks {
+    author
+    title
+    collection
+    volume
+    series
+    year
+    finishedPages
+    progress
+    rating
+  }
+}
