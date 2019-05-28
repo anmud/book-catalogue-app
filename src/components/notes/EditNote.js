@@ -62,7 +62,7 @@ function EditNote({ bookToNote, currentNote, setCurrentNote,  updateCurrentNote,
            
             </div>
       
-            <pre>{JSON.stringify(currentNote, null, 4)}</pre>
+          {/* <pre>{JSON.stringify(currentNote, null, 4)}</pre> */}
 
         </div>
     );

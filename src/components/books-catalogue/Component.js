@@ -39,7 +39,7 @@ function Catalogue(props) {
         <th>Finished Pages</th>
         <th>Progress</th>
         <th>Rating</th>
-        <th>Progress</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>

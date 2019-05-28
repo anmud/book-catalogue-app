@@ -9,7 +9,10 @@ import Rating from './components/rating/Component';
 import EditBook from './components/edit-book/Component'
 import Progress from './components/progress/Component'
 import Notes from './components/notes/Component'
-
+import Amplify from "@aws-amplify/core"
+import Auth from  "@aws-amplify/auth"
+import {withAuthenticator} from "aws-amplify-react"
+import aws_exports from "./aws_exports"
 
 
 
@@ -18,6 +21,7 @@ import Notes from './components/notes/Component'
 import { createBrowserHistory } from "history"
 export const history = createBrowserHistory()
 
+Amplify.configure(aws_exports)
 
 
 
@@ -342,4 +346,4 @@ function App() {
   );
 }
 
-export default App;
+export default withAuthenticator(App, {includeGreetings: true});
