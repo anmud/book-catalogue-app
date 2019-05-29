@@ -1,13 +1,14 @@
 1. Connect to graphql and implement basic queries:
 
-mutation addbook {
+mutation addBook {
   addBook(input: {
-    title: "Book 3"
-    author: "Author 3"
-    collection: "no collection"
-    volume: "no volume"
+    author: "Pushkin"
+    title: "Hello world"
+    collection: "nothing"
+    volume: "nothing"
+    series: "nothing"
     rating: 10
-    finishedPages:50
+    finishedPages: 50
     pages: 500
     year: "2019"
   })
