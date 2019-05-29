@@ -27,3 +27,16 @@ query getBooks {
     rating
   }
 }
+
+
+const sendSms = async data =>
+  await API.graphql(graphqlOperation(`
+        mutation {
+          sendSingleSms(input: {
+            to: ${JSON.stringify(data.to)}
+            from: ${JSON.stringify(data.from)}
+            body: ${JSON.stringify(data.body)}
+          })
+        }
+        `
+))
