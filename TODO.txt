@@ -40,3 +40,40 @@ const sendSms = async data =>
         }
         `
 ))
+
+// TODO
+mutation deleteBook {
+  deleteBook(input: {
+    id: "8b5b9bf9-bca8-479f-9759-6e922c11b807"
+  })
+}
+
+mutation rating {
+  setRating(input: {
+    id: "4e4d2b8f-8457-4b43-9dff-fb5640f1cf61"
+    rating: 5
+  })
+}
+
+mutation finishedPages {
+  setProgress(input: {
+    id: "4e4d2b8f-8457-4b43-9dff-fb5640f1cf61"
+    finishedPages: 50
+  })
+}
+
+mutation addNote {
+  addNote(input: {
+    bookId: "4e4d2b8f-8457-4b43-9dff-fb5640f1cf61"
+    noteAuthor: "Anastasia"
+    content: "Hello world!"
+    bookPage: 50
+  })
+}
+
+mutation deleteNote {
+  deleteNote(input:{
+    bookId: "4e4d2b8f-8457-4b43-9dff-fb5640f1cf61"
+    noteId: "49dfbe9f-b373-491b-9f0f-04cb258d1a5e"
+  })
+}
