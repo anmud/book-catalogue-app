@@ -2,7 +2,7 @@ import React  from 'react';
 import {history} from "../../App"
 
 
-function Progress({bookInProgress, setBookInProgress, updateProgress, books, setToggleProgress  }) {
+function Progress({bookInProgress, setBookInProgress, updateProgress,  setToggleProgress  }) {
   
 const handleInputChange = event => {
     const {name, value} = event.target

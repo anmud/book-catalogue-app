@@ -1,7 +1,49 @@
-import React  from 'react';
+import React, {useEffect}  from 'react';
 import { Link, } from 'react-router-dom'
+import API, {graphqlOperation} from '@aws-amplify/api'
+
+
 
 function Catalogue(props) {
+
+  const {books, setBooks, editRow, editRating, editProgress, addNote } = props
+ 
+
+  useEffect(() => {
+    // getBooks is an impure function
+    // it does side-effect: loads data from the database
+    //t
+    const getBooks = async () => {
+      const bookList = await API.graphql(graphqlOperation(`
+        query getBooks {
+          getBooks {
+            id
+            author
+            title
+            collection
+            volume
+            series
+            year
+            finishedPages
+            progress
+            rating
+            notes {
+              noteId
+              noteAuthor
+              content
+              date
+              bookPage
+            }
+            pages
+          }
+        }`))
+        setBooks(bookList.data.getBooks)
+      }
+    getBooks()
+  }, [])
+  console.log(books)
+
+
   // CRUD - Create, Read, Update, Delete
   // Create: setState()
   // Read: render()
@@ -16,10 +58,16 @@ function Catalogue(props) {
 
  // })
 
- const {books, setBooks, editRow, editRating, editProgress, addNote } = props
+ 
 
- const deleteBook = ({ books, bookId }) => {
-  return setBooks(books.filter(book => book.id !== bookId))
+ const deleteBook = async ({ books, bookId }) => {
+  await API.graphql(graphqlOperation(`
+  mutation deleteBook {
+    deleteBook(input: {
+      id: ${JSON.stringify(bookId)}
+    })
+  }`))
+  setBooks(books.filter(book => book.id !== bookId))
  }
 
 
@@ -37,6 +85,7 @@ function Catalogue(props) {
         <th>Series</th>
         <th>Year</th>
         <th>Finished Pages</th>
+        <th>Pages</th>
         <th>Progress</th>
         <th>Rating</th>
         <th>Actions</th>
@@ -53,7 +102,8 @@ function Catalogue(props) {
         <td>{book.series}</td>
         <td>{book.year}</td>
         <td>{book.finishedPages}</td>
-        <td>{book.progress}</td>
+        <td>{book.pages}</td>
+        <td>{book.progress} %</td>
         <td>{book.rating}</td>
      
         <td>

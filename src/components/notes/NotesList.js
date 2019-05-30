@@ -1,5 +1,5 @@
 import React from 'react';
-
+import API, {graphqlOperation} from '@aws-amplify/api'
 
 
 function NotesList({ books, setBooks,  bookToNote, setBookToNote, editNote}) {
@@ -9,46 +9,46 @@ function NotesList({ books, setBooks,  bookToNote, setBookToNote, editNote}) {
 
   const notes = filteredBook.length > 0 ? filteredBook[0].notes : []
 
-  const deleteNote = ({  notes, id }) => {
+ 
+   const deleteNote = async ({ id }) => {
     const filteredNotes = bookToNote.notes.filter(note => note.noteId !== id)
-    console.log('filtered', filteredNotes)
-     setBookToNote({...bookToNote, notes: [...filteredNotes] }) 
-     console.log("book", bookToNote)
-     return  setBooks(books.map(book => book.id === bookToNote.id ? ({...book, notes: [...filteredNotes] }) : book))
-
+    setBookToNote({...bookToNote, notes: [...filteredNotes] }) 
+    await API.graphql(graphqlOperation(`
+    mutation deleteNote {
+      deleteNote(input:{
+        bookId: ${JSON.stringify(bookToNote.id)}
+        noteId: ${JSON.stringify(id)}
+      })
+    }
+    `))
+    setBooks(books.map(book => book.id === bookToNote.id ? ({...book, notes: [...filteredNotes] }) : book))
    }
 
 
     return (
         <div>
-
+   <h2>"{bookToNote.title}" - Notes</h2>
         <div>
              <table>
                 <thead>
                   <tr>
-                    <th>#</th>
                     <th>Note Author</th>
-                    <th>Book title</th>
                     <th>Page number</th>
                     <th>Note</th>
                     <th>Date</th>
-                    <th>Time</th>
                   </tr>
                 </thead>
                 <tbody>
                 { notes.length >= 0 ?
                     ( notes.map(note => 
                     (<tr key={note.noteId}>
-                    <td>{note.noteId}</td>
                     <td>{note.noteAuthor}</td>
-                    <td>{note.bookTitle}</td>
                     <td>{note.bookPage}</td>
                     <td>{note.content}</td>
                     <td>{note.date}</td>
-                    <td>{note.time}</td>
                     <td>
                       <button onClick={() => editNote(note)}>Edit</button>
-                      <button onClick={() => deleteNote({id: note.noteId, notes: notes})}>Delete</button>
+                      <button onClick={() => deleteNote({id: note.noteId})}>Delete</button>
                     </td>
                   </tr>
                     ))

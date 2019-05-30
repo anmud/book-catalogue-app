@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
+import { history } from "../../App"
 import API, {graphqlOperation} from "@aws-amplify/api"
 
 
 function AddBook({books, setBooks}) {
   
   const [newBook, setNewBook] = useState({
-    id: null,
+    id: " ",
     author: "",
     title: "",
     collection: "",
@@ -14,9 +15,6 @@ function AddBook({books, setBooks}) {
     year: "",
     rating: 0,
     pages: 0,
-    finishedPages: 0,
-    progress: 0,
-    notes: [],
   })
 
 const handleInputChange = (event) => {
@@ -24,10 +22,24 @@ const handleInputChange = (event) => {
   setNewBook({...newBook, [name]: value})
 }
 
-const addNewBook = newBook => {
-  newBook.id = books.length + 1
-return  setBooks([...books, newBook])
-}
+
+  const addBookDB = async (newBook) => {
+     await API.graphql(graphqlOperation(`
+      mutation addBook {
+        addBook(input: {
+          author: ${JSON.stringify(newBook.author)}
+          title:  ${JSON.stringify(newBook.title)}
+          collection:  ${JSON.stringify(newBook.collection)}
+          volume:  ${JSON.stringify(newBook.volume)}
+          series:  ${JSON.stringify(newBook.series)}
+          pages:  ${newBook.pages}
+          year:  ${JSON.stringify(newBook.year)}
+        })
+      }`))
+      setBooks([...books, newBook])
+    }
+
+
 
   return (
     <div className="App">
@@ -39,8 +51,9 @@ return  setBooks([...books, newBook])
 
            (!newBook.author || ! newBook.title || ! newBook.year)
            ? console.log("enter smth in the input")
-           : addNewBook(newBook)
+           : addBookDB(newBook)
            setNewBook(newBook)
+           history.goBack()
          }}
         >
   <label>Author</label>

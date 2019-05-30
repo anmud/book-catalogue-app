@@ -1,17 +1,12 @@
 import React, { useState } from 'react';
 import { history } from "../../App"
+import API, {graphqlOperation} from "@aws-amplify/api"
 
 
 // default assignment
 // if d is not proived as an argument to a function use the value aufter the equal sign "="
 const currentDate = (d = new Date()) =>
     d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate()
-
-
-// default assignment
-// if d is not proived as an argument to a function use the value aufter the equal sign "="
-const currentTime = (d = new Date()) =>
-    ("0" + new Date().getHours()).slice(-2) + ":" + ("0" + new Date().getMinutes()).slice(-2)
 
 
 function AddNote({ books, setBooks, setToggleNotes, bookToNote, setBookToNote }) {
@@ -22,34 +17,44 @@ function AddNote({ books, setBooks, setToggleNotes, bookToNote, setBookToNote })
     }
 
     const [newNote, setNewNote] = useState({
-        noteId: 0,
+        noteId: "",
+        bookId: "",
         noteAuthor: "",
         content: "",
         bookPage: 0,
         date: "",
-        time: ""
     })
 
 
-    const addNewNote = ({ newNote, bookToNote, setBookToNote }) => {
-        const newNoteWId = { ...newNote, noteId: bookToNote.notes.length + 1, date: currentDate(), time: currentTime() }
+  
+    const addNewNote = async ({ newNote, bookToNote, setBookToNote }) => {
+        const newNoteWId = { ...newNote,  date: currentDate()}
         setNewNote({
-            noteId: 0,
+            noteId: "",
+            bookId: "",
             noteAuthor: "",
             content: "",
             bookPage: 0,
             date: "",
-            time: ""
-        })
+        }) 
+        await API.graphql(graphqlOperation(`
+        mutation addNote {
+            addNote(input: {
+              bookId: ${JSON.stringify(bookToNote.id)}
+              noteAuthor: ${JSON.stringify(newNoteWId.noteAuthor)}
+              content: ${JSON.stringify(newNoteWId.content)}
+              bookPage: ${newNoteWId.bookPage}
+            })
+          }
+          `))
         setBookToNote({ ...bookToNote, notes: [...bookToNote.notes, newNoteWId] })
-        return setBooks(books.map(book => book.id === bookToNote.id ?  ({ ...book, notes: [...book.notes, newNoteWId] })  : book))
-    }
-
+        setBooks(books.map(book => book.id === bookToNote.id ?  ({ ...book, notes: [...book.notes, newNoteWId] })  : book))
+       }
 
     return (
         <div>
 
-            <h2>Notes for the book</h2>
+            <h2>Add Note</h2>
 
             <div>
 
@@ -61,7 +66,7 @@ function AddNote({ books, setBooks, setToggleNotes, bookToNote, setBookToNote })
 
                     <div>
 
-                        {bookToNote.currentDate} - {bookToNote.currentTime}
+                        {bookToNote.currentDate} 
                     </div>
                     <br />
                     <div>

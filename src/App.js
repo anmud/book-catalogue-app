@@ -13,6 +13,7 @@ import Amplify from "@aws-amplify/core"
 import Auth from  "@aws-amplify/auth"
 import {withAuthenticator} from "aws-amplify-react"
 import aws_exports from "./aws_exports"
+import API, {graphqlOperation} from '@aws-amplify/api'
 
 
 
@@ -42,67 +43,12 @@ function App() {
 
   const [books, setBooks] = useState([
     // an object is a collection of 1) related data and 2) a container of primitive data type
-    {
-      id: 1,
-      author: "Theodore Dreiser",
-      title: "The Financier",
-      collection: "Collected works issued in twelve volumes",
-      volume: 3,
-      pages: 350,
-      finishedPages: 10,
-      progress: 0,
-      series: "A Trilogy of Desire",
-      notes: [{ noteId: 1, noteAuthor: "Dimitri", content: "blabla", date: "2019-5-21", time: "09:53", bookPage: 205 }, { noteId: 2, noteAuthor: "Anastasia", content: "bala", date: "2019-4-20", time: "05:45", bookPage: 127 }],
-      year: 1986,
-      rating: 0
-    },
-    {
-      id: 2,
-      author: "Theodore Dreiser",
-      title: "The Titan",
-      collection: "Collected works issued in twelve volumes",
-      volume: 4,
-      pages: 258,
-      finishedPages: 0,
-      progress: 0,
-      series: "A Trilogy of Desire",
-      notes: [{ noteId: 1, noteAuthor: "Dimitri", content: "blabla", date: "2019-5-18", time: "08:55", bookPage: 205 }, { noteId: 2, noteAuthor: "Anastasia", content: "bala", date: "2017-2-23", time: "10:24", bookPage: 127 }],
-      year: 1986,
-      rating: 0
-    },
-    {
-      id: 3,
-      author: "Theodore Dreiser",
-      title: "The Stoic",
-      collection: "Collected works issued in twelve volumes",
-      volume: 5,
-      pages: 320,
-      finishedPages: 0,
-      progress: 0,
-      series: "A Trilogy of Desire",
-      notes: [{ noteId: 1, noteAuthor: "Dimitri", content: "blabla", date: "2018-11-19", time: "15:39", bookPage: 205 }, { noteId: 2, noteAuthor: "Anastasia", content: "bala", date: "2019-5-14", time: "12:45", bookPage: 127 }],
-      year: 1986,
-      rating: 0
-    },
-    {
-      id: 4,
-      author: "Aleksandr Pushkin",
-      title: "Fairy Tales",
-      collection: "no collection",
-      volume: 0,
-      pages: 150,
-      finishedPages: 0,
-      progress: 0,
-      series: "no series",
-      notes: [{ noteId: 1, noteAuthor: "Dimitri", content: "blabla", date: "2019-10-10", time: "10:15", bookPage: 205 }, { noteId: 2, noteAuthor: "Anastasia", content: "bala", date: "2019-6-12", time: "09:14", bookPage: 127 }],
-      year: 1989,
-      rating: 0
-    },
+    
   ])
 
 
   const [currentBook, setCurrentBook] = useState({
-    id: 0,
+    id: "0",
     author: "",
     title: " ",
     collection: "",
@@ -145,7 +91,7 @@ function App() {
   const [rate, setRate] = useState(false)
 
   const [bookToRate, setBookToRate] = useState({
-    id: 0,
+    id: "0",
     author: " ",
     title: " ",
     rating: 0
@@ -162,11 +108,20 @@ function App() {
     })
   }
 
-  const updateRating = ({ bookToRate, id }) => {
+
+  const updateRating = async ({ bookToRate, id }) => {
     setRate(false)
     history.goBack()
-    return setBooks(books.map(book => (book.id === id ? { ...book, rating: bookToRate.rating } : book)))
-  }
+    await API.graphql(graphqlOperation(`
+    mutation rating {
+      setRating(input: {
+        id: ${JSON.stringify(id)}
+        rating: ${bookToRate.rating}
+      })
+    }`))
+     setBooks(books.map(book => (book.id === id ? { ...book, rating: bookToRate.rating } : book)))
+   }
+
 
   const [toggleProgress, setToggleProgress] = useState(false)
 
@@ -192,18 +147,31 @@ function App() {
     })
   }
 
-  const updateProgress = ({ bookInProgress, id }) => {
+  // const updateProgress = ({ bookInProgress, id }) => {
+  //   setToggleProgress(false)
+  //   history.goBack()
+  //   return setBooks(books.map(book =>
+  //     (book.id === id ? { ...book, finishedPages: bookInProgress.finishedPages, progress: (Math.round((bookInProgress.finishedPages / bookInProgress.pages) * 100)) } : book)))
+  // }
+
+  const updateProgress = async ({ bookInProgress, id }) => {
     setToggleProgress(false)
     history.goBack()
-    return setBooks(books.map(book =>
+    await API.graphql(graphqlOperation(`
+    mutation finishedPages {
+      setProgress(input: {
+        id: ${JSON.stringify(id)}
+        finishedPages:  ${bookInProgress.progress}
+      })
+    }`))
+      setBooks(books.map(book =>
       (book.id === id ? { ...book, finishedPages: bookInProgress.finishedPages, progress: (Math.round((bookInProgress.finishedPages / bookInProgress.pages) * 100)) } : book)))
-  }
-
+   }
 
   const [toggleNotes, setToggleNotes] = useState(false)
 
   const [bookToNote, setBookToNote] = useState({
-    id: 0,
+    id: "0",
     title: "",
     notes: [{ noteId: 0, noteAuthor: "", bookTitle: "", content: "", date: '', time: "", bookPage: 0 }],
     currentDate: '',

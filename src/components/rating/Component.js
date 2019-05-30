@@ -2,13 +2,15 @@ import React  from 'react';
 import {history} from '../../App'
 
 
-function Rating({ bookToRate, setBookToRate, updateRating, rate, setRate}) {
+function Rating({ bookToRate, setBookToRate, updateRating, setRate}) {
   
 
   const handleInputChange = (event) => {
     const { name, value } = event.target
     setBookToRate({ ...bookToRate, [name]: value })
   }
+
+
 
   return (
     <div>
