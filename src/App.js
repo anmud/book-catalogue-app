@@ -112,7 +112,7 @@ function App() {
   const updateRating = async ({ bookToRate, id }) => {
     setRate(false)
     history.goBack()
-    await API.graphql(graphqlOperation(`
+   const {data} = await API.graphql(graphqlOperation(`
     mutation rating {
       setRating(input: {
         id: ${JSON.stringify(id)}
@@ -147,25 +147,21 @@ function App() {
     })
   }
 
-  // const updateProgress = ({ bookInProgress, id }) => {
-  //   setToggleProgress(false)
-  //   history.goBack()
-  //   return setBooks(books.map(book =>
-  //     (book.id === id ? { ...book, finishedPages: bookInProgress.finishedPages, progress: (Math.round((bookInProgress.finishedPages / bookInProgress.pages) * 100)) } : book)))
-  // }
 
   const updateProgress = async ({ bookInProgress, id }) => {
     setToggleProgress(false)
     history.goBack()
-    await API.graphql(graphqlOperation(`
+    setBooks(books.map(book =>
+      (book.id === id ? { ...book, finishedPages: bookInProgress.finishedPages, progress: (Math.round((bookInProgress.finishedPages / bookInProgress.pages) * 100)) } : book)))
+   const {data} = await API.graphql(graphqlOperation(`
     mutation finishedPages {
       setProgress(input: {
         id: ${JSON.stringify(id)}
-        finishedPages:  ${bookInProgress.progress}
+        finishedPages:  ${bookInProgress.finishedPages}
+        progress: ${(Math.round((bookInProgress.finishedPages / bookInProgress.pages) * 100))}
       })
     }`))
-      setBooks(books.map(book =>
-      (book.id === id ? { ...book, finishedPages: bookInProgress.finishedPages, progress: (Math.round((bookInProgress.finishedPages / bookInProgress.pages) * 100)) } : book)))
+      
    }
 
   const [toggleNotes, setToggleNotes] = useState(false)
@@ -173,7 +169,7 @@ function App() {
   const [bookToNote, setBookToNote] = useState({
     id: "0",
     title: "",
-    notes: [{ noteId: 0, noteAuthor: "", bookTitle: "", content: "", date: '', time: "", bookPage: 0 }],
+    notes: [{ noteId: 0, bookId: "", noteAuthor: "", bookTitle: "", content: "", date: '', time: "", bookPage: 0 }],
     currentDate: '',
     currentTime: ''
   })

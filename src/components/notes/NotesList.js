@@ -11,9 +11,7 @@ function NotesList({ books, setBooks,  bookToNote, setBookToNote, editNote}) {
 
  
    const deleteNote = async ({ id }) => {
-    const filteredNotes = bookToNote.notes.filter(note => note.noteId !== id)
-    setBookToNote({...bookToNote, notes: [...filteredNotes] }) 
-    await API.graphql(graphqlOperation(`
+    const {data} = await API.graphql(graphqlOperation(`
     mutation deleteNote {
       deleteNote(input:{
         bookId: ${JSON.stringify(bookToNote.id)}
@@ -21,7 +19,13 @@ function NotesList({ books, setBooks,  bookToNote, setBookToNote, editNote}) {
       })
     }
     `))
+   
+    const filteredNotes = bookToNote.notes.filter(note => note.noteId !== id)
+  console.log("filteredNotes", filteredNotes)
+    setBookToNote({...bookToNote, notes: [...filteredNotes] }) 
+    console.log("delete data", data)
     setBooks(books.map(book => book.id === bookToNote.id ? ({...book, notes: [...filteredNotes] }) : book))
+
    }
 
 
@@ -60,6 +64,7 @@ function NotesList({ books, setBooks,  bookToNote, setBookToNote, editNote}) {
                    }
                 </tbody>
               </table>
+              <pre>{JSON.stringify(bookToNote.notes, null, 4)}</pre>
               <br/>
               <br/>
         </div>

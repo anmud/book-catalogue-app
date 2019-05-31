@@ -61,7 +61,7 @@ function Catalogue(props) {
  
 
  const deleteBook = async ({ books, bookId }) => {
-  await API.graphql(graphqlOperation(`
+ const {data} = await API.graphql(graphqlOperation(`
   mutation deleteBook {
     deleteBook(input: {
       id: ${JSON.stringify(bookId)}

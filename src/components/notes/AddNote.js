@@ -26,7 +26,6 @@ function AddNote({ books, setBooks, setToggleNotes, bookToNote, setBookToNote })
     })
 
 
-  
     const addNewNote = async ({ newNote, bookToNote, setBookToNote }) => {
         const newNoteWId = { ...newNote,  date: currentDate()}
         setNewNote({
@@ -37,19 +36,29 @@ function AddNote({ books, setBooks, setToggleNotes, bookToNote, setBookToNote })
             bookPage: 0,
             date: "",
         }) 
-        await API.graphql(graphqlOperation(`
+     const {data}  =  await API.graphql(graphqlOperation(`
         mutation addNote {
             addNote(input: {
               bookId: ${JSON.stringify(bookToNote.id)}
               noteAuthor: ${JSON.stringify(newNoteWId.noteAuthor)}
               content: ${JSON.stringify(newNoteWId.content)}
               bookPage: ${newNoteWId.bookPage}
-            })
+            }) {
+                noteId
+                noteAuthor
+                date
+                content
+                bookPage
+              }
           }
           `))
-        setBookToNote({ ...bookToNote, notes: [...bookToNote.notes, newNoteWId] })
-        setBooks(books.map(book => book.id === bookToNote.id ?  ({ ...book, notes: [...book.notes, newNoteWId] })  : book))
+          console.log("add note data", data)
+      
+        setBookToNote({ ...bookToNote, notes: [...data.addNote] })
+        setBooks(books.map(book => book.id === bookToNote.id ?  ({ ...book, notes: [...data.addNote] })  : book))
        }
+
+
 
     return (
         <div>

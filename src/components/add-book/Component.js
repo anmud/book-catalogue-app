@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { history } from "../../App"
 import API, {graphqlOperation} from "@aws-amplify/api"
 
@@ -23,8 +23,9 @@ const handleInputChange = (event) => {
 }
 
 
+
   const addBookDB = async (newBook) => {
-     await API.graphql(graphqlOperation(`
+    const {data} = await API.graphql(graphqlOperation(`
       mutation addBook {
         addBook(input: {
           author: ${JSON.stringify(newBook.author)}
