@@ -11,6 +11,7 @@ function NotesList({ books, setBooks,  bookToNote, setBookToNote, editNote}) {
 
  
    const deleteNote = async ({ id }) => {
+     console.log("id", id)
     const {data} = await API.graphql(graphqlOperation(`
     mutation deleteNote {
       deleteNote(input:{
@@ -64,7 +65,7 @@ function NotesList({ books, setBooks,  bookToNote, setBookToNote, editNote}) {
                    }
                 </tbody>
               </table>
-              <pre>{JSON.stringify(bookToNote.notes, null, 4)}</pre>
+              {/* <pre>{JSON.stringify(bookToNote.notes, null, 4)}</pre> */}
               <br/>
               <br/>
         </div>

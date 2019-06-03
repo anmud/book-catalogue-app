@@ -85,10 +85,10 @@ function SearchBook({books}) {
 
 </div>
 
-<pre>{JSON.stringify(searchValue, null, 4)}</pre>
+{/* <pre>{JSON.stringify(searchValue, null, 4)}</pre>
 
    <pre>{JSON.stringify(booksByAuthor, null, 4)}</pre>
-      <pre>{JSON.stringify(booksByTitle, null, 4)}</pre>
+      <pre>{JSON.stringify(booksByTitle, null, 4)}</pre> */}
     </div>
   );
 }

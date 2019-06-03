@@ -201,9 +201,10 @@ function App() {
 
         <Switch>
           <Route exact path="/" render={() => { return <Home /> }} />
-          <Route path="/catalogue" render={() => {
+          <Route path="/catalogue" render={(props) => {
             return (
               <Catalogue
+              {...props}
                 books={books}
                 setBooks={setBooks}
                 editRow={editRow}
