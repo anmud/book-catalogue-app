@@ -1,0 +1,78 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+}
+
+type BooksList {
+  author: String!
+  collection: String!
+  finishedPages: Int!
+  id: String!
+  notes: [Note]!
+  pages: Int!
+  progress: Int!
+  rating: Int!
+  series: String!
+  title: String!
+  volume: String!
+  year: String!
+}
+
+type Mutation {
+  addBook(input: BookDataInput): String
+  addNote(input: NoteInput): [Note]
+  deleteBook(input: DeleteBookInput): String
+  deleteNote(input: DeleteNoteInput): String
+  setProgress(input: ProgressInput): String
+  setRating(input: RatingInput): String
+}
+
+type Note {
+  bookPage: Int!
+  content: String!
+  date: String!
+  noteAuthor: String!
+  noteId: ID!
+}
+
+type Query {
+  getBooks: [BooksList]
+}
+
+input BookDataInput {
+  author: String!
+  collection: String!
+  pages: Int!
+  series: String!
+  title: String!
+  volume: String!
+  year: String!
+}
+
+input DeleteBookInput {
+  id: ID!
+}
+
+input DeleteNoteInput {
+  bookId: ID!
+  noteId: ID!
+}
+
+input NoteInput {
+  #  alis for bookId
+  bookId: ID!
+  bookPage: Int!
+  content: String!
+  noteAuthor: String!
+}
+
+input ProgressInput {
+  finishedPages: Int!
+  id: ID!
+  progress: Int!
+}
+
+input RatingInput {
+  id: ID!
+  rating: Int!
+}
